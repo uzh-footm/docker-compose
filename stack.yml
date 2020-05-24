@@ -1,0 +1,45 @@
+version: '3.1'
+
+services: 
+
+   informationservice:
+     image: 'footm/informationservice:1.0-SNAPSHOT'
+     ports:
+       - 8080:8080
+     depends_on:
+       - db
+
+   db:
+     environment:
+       POSTGRES_DATABASE: db
+       POSTGRES_PASSWORD: password
+       POSTGRES_USER: postgres
+     image: "postgres:alpine"
+     restart: always
+     volumes:
+       - "./10-LeaguesTable.sql:/docker-entrypoint-initdb.d/10-LeaguesTable.sql"
+       - "./15-ClubsTable.sql:/docker-entrypoint-initdb.d/15-ClubsTable.sql"
+       - "./20-NationalitiesTable.sql:/docker-entrypoint-initdb.d/20-NationalitiesTable.sql"
+       - "./30-PlayerTable.sql:/docker-entrypoint-initdb.d/30-PlayerTable.sql"
+
+
+#    No need to run, CLIENT NOT IMPLEMENTED(GUI)
+#  preferencedb:
+#    environment:
+#        POSTGRES_DATABASE: preferenceDB
+#        POSTGRES_PASSWORD: password
+#        POSTGRES_USER: postgres
+#    image: "postgres:alpine"
+#    restart: always
+#    volumes:
+#        - "./10-formationEnum.sql:/docker-entrypoint-initdb.d/10-formationEnum.sql"
+#        - "./20-userTable.sql:/docker-entrypoint-initdb.d/20-userTable.sql"
+#        - "./30-formationTable.sql:/docker-entrypoint-initdb.d/30-formationTable.sql"
+#
+#  preferenceservice:
+#    image: 'footm/preferenceservice:1.0-SNAPSHOT'
+#    ports:
+#        - 6060:8080
+#        - 6061:8081
+#    depends_on:
+#        - preferencedb
